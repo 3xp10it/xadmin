@@ -131,7 +131,7 @@ echo 'code:'.$_POST['code'];
 if($_POST['code'] == $_SESSION["verification"] and $_POST['username']=='admin' and $_POST['pass']=='woaini'){
 		echo "Congratulations! you have break it,good job";
 		$a="A";
-		for($i=0;i<5000;$i++)
+		for($i=0;$i<5000;$i++)
 			$a=$a."B";
 		echo $a;
 		//header("Location: https://3xp10it.cc");
@@ -384,12 +384,12 @@ if __name__ == '__main__':
 交识别到的验证码和用户名和密码到form action的url,每次用户名和密码都可以变,但验证码可以不变
 
 也可以尝试首先访问登录页面,尝试得到验证码url[这里session已经刷新]和form action表单提交到的url,
-如果能够得到验证码url,说明登录页面有验证码,然后换一台机器[换一台没有访问过这个验证码url的机器]
+如果能够得到验证码url,说明登录页面有验证码,然后换一个浏览器[换一个没有访问过验证码url的浏览器]
 直接将用户名和密码提交到刚才获得的form action提交到的url,这里不用加验证码就可以直接暴破了,要
 求form action提交到的url[也即用户名密码和验证码验证页面]中的验证方式如:
 if $_POST['eg.code']==$_SESSION['eg.verification']则通过验证码这一关验证,如果验证码的验证代码
 是:
-   if $_POST['eg.code']==$_SESSION['eg.verification']则通过验证码这一关验证
+   if md5($_POST['eg.code'])==$_SESSION['eg.verification']则通过验证码这一关验证
 这样的形式就没办法用换机器不加验证码的方法来暴破了
 
 
