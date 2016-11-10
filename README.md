@@ -8,8 +8,8 @@ summary:    自动识别验证码暴力破解
 categories: web  
 tags:  
  - session
- - python
- - php
+ - python  
+ - php  
 ---
 
 ### 0x00 环境准备
@@ -142,7 +142,7 @@ if($_POST['code'] == $_SESSION["verification"] and $_POST['username']=='admin' a
 
 ### 0x01 xadmin.py
 
-usage:
+usage:  
 	python3 xadmin.py http://localhost/admin.php
 
 xadmin.py为爆破代码,内容如下:
@@ -410,5 +410,5 @@ http://stackoverflow.com/questions/12737740/python-requests-and-persistent-sessi
 		#do whatever, s will keep your cookies intact :)
 ```
 
-本文中代码链接如下:
+
 
