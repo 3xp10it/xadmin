@@ -102,23 +102,6 @@ def crack_admin_login_url(
             urls_table_name = http_domain_value.split(
                 "/")[-1].replace(".", "_") + "_urls"
 
-            # 在爆破成功时将数据库中相应字段标记,并发送邮件
-            # 在非urls表中将cracked_admin_login_urls_info字段添加新的爆破信息
-            for each_table in table_name_list:
-                auto_write_string_to_sql(
-                    string,
-                    eval(get_key_value_from_config_file('config.ini', 'default', 'db_name')),
-                    each_table,
-                    "cracked_admin_login_urls_info",
-                    "http_domain",
-                    http_domain_value)
-            # 将urls表中cracked_admin_login_url_info字段标记为爆破结果信息
-            execute_sql_in_db(
-                "update %s set cracked_admin_login_url_info='%s' where url='%s'" %
-                (urls_table_name, string, url), eval(get_key_value_from_config_file('config.ini', 'default', 'db_name')))
-            mail_msg_to(
-                string,
-                subject="cracked webshell url")
             return {'username': username, 'password': password}
 
     def crack_admin_login_url_inside_func(url, username, pass_dict_file):
