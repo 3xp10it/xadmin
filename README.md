@@ -13,6 +13,12 @@ tags:
  
 ---
 
+### 0xff Changelog
+
+```
+[+] 2017-01-06 添加支持如http://127.0.0.1/administrator页面的爆破,实际上http://127.0.0.1/administrator并不是直接的管理员页面,在浏览器中输入http://127.0.0.1/administrator后会跳转到"http://127.0.0.1/administrator/",这才是有效页面
+```
+
 ### 0x00 环境准备
 
 admin.php,yanzhengma.php,check_login.php  
